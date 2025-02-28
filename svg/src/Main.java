@@ -6,5 +6,6 @@ public class Main {
 
 //        System.out.println("X = " + p.x + " Y = " + p.y);
         System.out.println(p);
+        System.out.println(p.toSvg());
     }
 }
