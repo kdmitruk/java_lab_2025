@@ -5,7 +5,11 @@ public class Main {
         p.y = 7.5;
 
 //        System.out.println("X = " + p.x + " Y = " + p.y);
+        //System.out.println(p);
+        //System.out.println(p.toSvg());
+
+        Point p2 = p.translated(2.0, 3.5);
         System.out.println(p);
-        System.out.println(p.toSvg());
+        System.out.println(p2);
     }
 }

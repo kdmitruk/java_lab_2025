@@ -19,4 +19,14 @@ public class Point {
 //    public String toString() {
 //        return "X = " + x + "\nY = " + y;
 //    }
+    public void translate(double dx, double dy) {
+        x += dx;
+        y += dy;
+    }
+    public Point translated(double dx, double dy) {
+        Point p = new Point();
+        p.x = this.x + dx;
+        p.y = this.y + dy;
+        return p;
+    }
 }
