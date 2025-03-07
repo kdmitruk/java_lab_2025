@@ -13,9 +13,12 @@ public class Main {
         Point p2 = p.translated(4.0, 3.0);
         System.out.println(p);
         System.out.println(p2);
-        Segment s1=new Segment();
-        s1.a=p;
-        s1.b=p2;
+        Segment s1=new Segment(p, p2);
+        System.out.println(s1);
+        p.setX(100.0);
+        System.out.println(s1);
         System.out.println(s1.length());
+        Segment s2 = new Segment(new Point(3.5, 5.3), new Point(4.2, 2.4));
+        System.out.println(s2);
     }
 }
