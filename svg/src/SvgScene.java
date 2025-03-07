@@ -24,4 +24,15 @@ public class SvgScene {
                 ", polygons=" + Arrays.toString(polygons) +
                 '}';
     }
+
+    public String toSvg()
+    {
+        String result = "<svg xmlns=\"http://www.w3.org/2000/svg\">";
+        for(var polygon : polygons)
+        {
+            result += "\n\t" + polygon.toSvg();
+        }
+        result += "\n</svg>";
+        return result;
+    }
 }
