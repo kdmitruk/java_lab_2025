@@ -28,12 +28,17 @@ public class Main {
 
     public static void polygons() {
         Point[] points = {
-                new Point(10.0, 50.0),
-                new Point(50.0, 100.0),
-                new Point(100.0, 150.0)
+                new Point(10.0, 10.0),
+                new Point(150.0, 10.0),
+                new Point(10.0, 150.0)
         };
 
         Polygon polygon = new Polygon(points);
+        System.out.println(polygon);
+        System.out.println(polygon.toSvg());
+//        points[2] = new Point(2.0, 5.7);
+        points[2].setX(5.0);
+        points[2].setY(7.4);
         System.out.println(polygon);
         System.out.println(polygon.toSvg());
     }
