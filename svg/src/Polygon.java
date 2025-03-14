@@ -5,17 +5,6 @@ public class Polygon {
     private Point[] points;
     private Style style = new Style("transparent", "black", 1.0);
 
-//    public Polygon(Point[] points) {
-//        this.points = points;
-//    }
-//    public Polygon(Point[] points) {
-//        this.points = new Point[points.length];
-//        for(int i =0; i < points.length; i++)
-//        {
-//            this.points[i] = points[i];
-//        }
-//
-//    }
     public Polygon(Point[] points) {
         this.points = new Point[points.length];
         for(int i =0; i < points.length; i++)
@@ -28,7 +17,11 @@ public class Polygon {
         this(points);
         this.style = style;
     }
-
+    public static Polygon square(Segment segment, Style style) {
+        Segment perpendicular = segment.perpendicular();
+        Point[] points = new Point[]{segment.getA(), perpendicular.getB(), segment.getB(), perpendicular.getA()};
+        return new Polygon(points, style);
+    }
     @Override
     public String toString() {
         return "Polygon{" +

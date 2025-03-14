@@ -62,11 +62,15 @@ public class Main {
                 new Point(10, 20),
                 new Point(25, 45)
         });
-
+        Polygon p4 = Polygon.square(
+                new Segment(new Point(50, 30), new Point(10, 20)),
+                new Style("green", "purple", 1)
+        );
         SvgScene scene = new SvgScene();
         scene.addPolygon(p1);
         scene.addPolygon(p2);
         scene.addPolygon(p3);
+        scene.addPolygon(p4);
         System.out.println(scene);
         //System.out.println(scene.toSvg());
         scene.save("result.svg");
