@@ -48,10 +48,10 @@ public class Main {
 
     public static void scene() throws IOException {
         Polygon p1 = new Polygon(new Point[]{
-                new Point(2.0, 6.5),
-                new Point(40.0, 50.5),
-                new Point(80.0, 99.5)
-        });
+                new Point(10.0, 10.0),
+                new Point(200.0, 10.0),
+                new Point(10.0, 200.0)
+        }, new Style("green", "yellow", 5.0));
         Polygon p2 = new Polygon(new Point[]{
                 new Point(32.0, 53.5),
                 new Point(32.0, 50.5),

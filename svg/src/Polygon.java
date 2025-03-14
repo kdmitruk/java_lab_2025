@@ -3,6 +3,7 @@ import java.util.Locale;
 
 public class Polygon {
     private Point[] points;
+    private Style style = new Style("transparent", "black", 1.0);
 
 //    public Polygon(Point[] points) {
 //        this.points = points;
@@ -21,7 +22,11 @@ public class Polygon {
         {
             this.points[i] = new Point(points[i]);
         }
+    }
 
+    public Polygon(Point[] points, Style style) {
+        this(points);
+        this.style = style;
     }
 
     @Override
@@ -36,7 +41,7 @@ public class Polygon {
         for(Point point : points) {
             pointsString += point.getX() + "," + point.getY() + " ";
         }
-        return String.format(Locale.ENGLISH, "<polygon points=\"%s\" style=\"fill:lime;stroke:purple;stroke-width:3\" />", pointsString);
+        return String.format(Locale.ENGLISH, "<polygon points=\"%s\" %s />", pointsString, style.toSvg());
     }
 
     public BoundingBox boundingBox() {
