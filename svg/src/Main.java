@@ -71,6 +71,7 @@ public class Main {
         scene.addPolygon(p2);
         scene.addPolygon(p3);
         scene.addPolygon(p4);
+        scene.addEllipse(new Ellipse(9, 11, new Point(10, 23)));
         System.out.println(scene);
         //System.out.println(scene.toSvg());
         scene.save("result.svg");

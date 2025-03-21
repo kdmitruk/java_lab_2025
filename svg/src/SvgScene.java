@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public class SvgScene {
-    private int index = 0;
+    private int indexP = 0;
     private Polygon[] polygons = new Polygon[3];
+    private int indexE = 0;
+    private Ellipse[] ellipses = new Ellipse[3];
 
     public void addPolygon(Polygon polygon) {
 //        if (index >= polygons.length) {
@@ -18,15 +20,12 @@ public class SvgScene {
 //            this.polygons[index] = polygon;
 //            this.index++;
 //        }
-        polygons[(index++) % 3] = polygon;
+        polygons[(indexP++) % 3] = polygon;
     }
 
-    @Override
-    public String toString() {
-        return "SvgScene{" +
-                "index=" + index +
-                ", polygons=" + Arrays.toString(polygons) +
-                '}';
+    public void addEllipse(Ellipse ellipse)
+    {
+        ellipses[(indexE++) % 3] = ellipse;
     }
 
     private BoundingBox sceneBox() {
@@ -47,7 +46,14 @@ public class SvgScene {
                 boundingBox.width(), boundingBox.height());
         for(var polygon : polygons)
         {
-            result += "\n\t" + polygon.toSvg();
+            if(polygon != null)
+                result += "\n\t" + polygon.toSvg();
+        }
+        result += "\n";
+        for(var ellipse : ellipses)
+        {
+            if(ellipse != null)
+               result += "\n\t" + ellipse.toSvg();
         }
         result += "\n</svg>";
         return result;
