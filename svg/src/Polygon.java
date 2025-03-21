@@ -4,18 +4,33 @@ import java.util.Locale;
 public class Polygon extends Shape {
     private Point[] points;
 
-    public Polygon(Point[] points) {
+    private void initPoints(Point[] points) {
         this.points = new Point[points.length];
         for(int i =0; i < points.length; i++)
-        {
             this.points[i] = new Point(points[i]);
-        }
     }
 
     public Polygon(Point[] points, Style style) {
-        this(points);
-        this.style = style;
+        super(style);
+        initPoints(points);
     }
+
+    public Polygon(Point[] points) {
+        initPoints(points);
+    }
+
+//    public Polygon(Point[] points) {
+//        this.points = new Point[points.length];
+//        for(int i =0; i < points.length; i++)
+//        {
+//            this.points[i] = new Point(points[i]);
+//        }
+//    }
+//
+//    public Polygon(Point[] points, Style style) {
+//        this(points);
+//        this.style = style;
+//    }
     public static Polygon square(Segment segment, Style style) {
         Segment perpendicular = segment.perpendicular();
         Point[] points = new Point[]{segment.getA(), perpendicular.getB(), segment.getB(), perpendicular.getA()};
@@ -33,7 +48,7 @@ public class Polygon extends Shape {
         for(Point point : points) {
             pointsString += point.getX() + "," + point.getY() + " ";
         }
-        return String.format(Locale.ENGLISH, "<polygon points=\"%s\" %s />", pointsString, style.toSvg());
+        return String.format(Locale.ENGLISH, "<polygon points=\"%s\" %s />", pointsString, super.getStyle().toSvg());
     }
     @Override
     public BoundingBox boundingBox() {

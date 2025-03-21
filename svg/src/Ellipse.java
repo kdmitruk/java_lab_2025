@@ -11,14 +11,14 @@ public class Ellipse extends Shape {
         this.center = new Point(center);
     }
 
-    public Ellipse(double rx, double ry, Point center, Style style) {
-        this(rx, ry, center);
-        this.style = style;
-    }
+//    public Ellipse(double rx, double ry, Point center, Style style) {
+//        this(rx, ry, center);
+//        this.style = style;
+//    }
     @Override
     public String toSvg() {
         return String.format(Locale.ENGLISH, "<ellipse rx=\"%f\" ry=\"%f\" cx=\"%f\" cy=\"%f\" %s />",
-                rx, ry, center.getX(), center.getY(), style.toSvg());
+                rx, ry, center.getX(), center.getY(), super.getStyle().toSvg());
     }
     @Override
     public BoundingBox boundingBox() {
