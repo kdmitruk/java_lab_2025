@@ -67,11 +67,11 @@ public class Main {
                 new Style("green", "purple", 1)
         );
         SvgScene scene = new SvgScene();
-        scene.addPolygon(p1);
-        scene.addPolygon(p2);
-        scene.addPolygon(p3);
-        scene.addPolygon(p4);
-        scene.addEllipse(new Ellipse(9, 11, new Point(10, 23)));
+        scene.addShape(p1);
+        scene.addShape(p2);
+        scene.addShape(p3);
+        scene.addShape(p4);
+        scene.addShape(new Ellipse(9, 11, new Point(10, 23)));
         System.out.println(scene);
         //System.out.println(scene.toSvg());
         scene.save("result.svg");

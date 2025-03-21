@@ -1,8 +1,7 @@
 import java.util.Locale;
 
-public class Ellipse {
+public class Ellipse extends Shape {
     private Point center;
-    private Style style = new Style("transparent", "black", 1.0);
     private double rx;
     private double ry;
 
@@ -16,12 +15,12 @@ public class Ellipse {
         this(rx, ry, center);
         this.style = style;
     }
-
+    @Override
     public String toSvg() {
         return String.format(Locale.ENGLISH, "<ellipse rx=\"%f\" ry=\"%f\" cx=\"%f\" cy=\"%f\" %s />",
                 rx, ry, center.getX(), center.getY(), style.toSvg());
     }
-
+    @Override
     public BoundingBox boundingBox() {
         double x = center.getX() - rx;
         double y = center.getY() - ry;

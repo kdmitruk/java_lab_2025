@@ -1,9 +1,8 @@
 import java.util.Arrays;
 import java.util.Locale;
 
-public class Polygon {
+public class Polygon extends Shape {
     private Point[] points;
-    private Style style = new Style("transparent", "black", 1.0);
 
     public Polygon(Point[] points) {
         this.points = new Point[points.length];
@@ -28,7 +27,7 @@ public class Polygon {
                 "points=" + Arrays.toString(points) +
                 '}';
     }
-
+    @Override
     public String toSvg()    {
         String pointsString = "";
         for(Point point : points) {
@@ -36,7 +35,7 @@ public class Polygon {
         }
         return String.format(Locale.ENGLISH, "<polygon points=\"%s\" %s />", pointsString, style.toSvg());
     }
-
+    @Override
     public BoundingBox boundingBox() {
         double xMin = this.points[0].getX();
         double xMax = this.points[0].getX();
