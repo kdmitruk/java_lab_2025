@@ -2,11 +2,15 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Shape triangle = new ShapeStrokeDecorator(new Polygon(new Vec2[]{
+        Shape triangle = new TransformationDecorator.Builder()
+                .scale(new Vec2(2, 1))
+                .rotate(90 ,new Vec2(100, 200))
+                .build(
+                new ShapeStrokeDecorator(new Polygon(new Vec2[]{
                 new Vec2(0, 0),
                 new Vec2(300, 0),
                 new Vec2(150, 250)
-        }),5,"red");
+        }),5,"red"));
 
         Shape rectangle = new SolidFillShapeDecorator(new Polygon(new Vec2[]{
                 new Vec2(350, 0),
