@@ -2,11 +2,11 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Polygon triangle = new Polygon(new Vec2[]{
+        Shape triangle = new ShapeStrokeDecorator(new Polygon(new Vec2[]{
                 new Vec2(0, 0),
                 new Vec2(300, 0),
                 new Vec2(150, 250)
-        });
+        }),5,"red");
 
         Shape rectangle = new SolidFillShapeDecorator(new Polygon(new Vec2[]{
                 new Vec2(350, 0),
@@ -23,7 +23,11 @@ public class Main {
                 new Vec2(600, 260)
         }, "purple");
 
-        Shape ellipse = new SolidFillShapeDecorator(new Ellipse(new Vec2(500, 700), 400, 100), "yellow");
+        Shape ellipse = new ShapeStrokeDecorator(
+                new SolidFillShapeDecorator(
+                        new Ellipse(new Vec2(500, 700), 400, 100), "yellow"),
+                100,"blue"
+        );
 
         SvgScene scene = new SvgScene();
         scene.addShape(triangle);
