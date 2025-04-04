@@ -13,8 +13,13 @@ public class Main {
 //        }
         Person person = new Person("Adam","Nowak",LocalDate.of(2000,5,21));
         Person child = new Person("Pawel","Kowalski",LocalDate.of(2003,2,10));
-        System.out.println(person.adopt(child));
-        System.out.println(person.adopt(child));
-        System.out.println(person);
+        Person child1 = new Person("Jan","Nowak",LocalDate.of(2010,6,13));
+        Person child2 = new Person("Dan","Nowak",LocalDate.of(2015,7,18));
+        Person child3 = new Person("Gan","Nowak",LocalDate.of(2020,8,25));
+        person.adopt(child);
+        person.adopt(child1);
+        person.adopt(child2);
+        person.adopt(child3);
+        System.out.println(person.getYoungestChild());
     }
 }

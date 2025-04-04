@@ -27,4 +27,16 @@ public class Person {
                 ", children=" + children +
                 '}';
     }
+
+    public Person getYoungestChild(){
+        if(children.isEmpty()) return null;
+        Person youngest = (Person) children.toArray()[0];
+        for(Person child : children){
+            //System.out.println(child);
+            if(youngest.birthDay.compareTo(child.birthDay)<0){
+                youngest = child;
+            }
+        }
+        return youngest;
+    }
 }
