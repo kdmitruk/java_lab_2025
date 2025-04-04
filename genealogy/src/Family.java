@@ -1,15 +1,29 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Family {
-    private Map<String, Person> people = new HashMap<>();
+    private Map<String, List<Person>> people = new HashMap<>();
 
     public void add(Person... people){
         for (Person person : people){
-            this.people.put(person.name(), person);
+            if(this.people.containsKey(person.name())){
+                List<Person> peopleWithSameName = this.people.get(person.name());
+                if(!peopleWithSameName.contains(person)){
+                    peopleWithSameName.add(person);
+                }
+            } else {
+                List<Person> peopleWithSameName = new ArrayList<>();
+                peopleWithSameName.add(person);
+                this.people.put(person.name(), peopleWithSameName);
+            }
         }
     }
-    public Person get(String name){
-        return people.get(name);
+    public Person[] get(String name){
+        List<Person> peopleWithSameName = people.get(name);
+        if(peopleWithSameName==null)
+            return null;
+        Person[] result = new Person[peopleWithSameName.size()];
+        peopleWithSameName.toArray(result);
+        Arrays.sort(result);
+        return result;
     }
 }
