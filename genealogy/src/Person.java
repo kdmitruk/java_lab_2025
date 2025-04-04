@@ -1,6 +1,8 @@
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.util.List.copyOf;
+
 public class Person implements Comparable<Person> {
     private String firstName,lastName;
     private LocalDate birthDay;
@@ -36,5 +38,9 @@ public class Person implements Comparable<Person> {
     @Override
     public int compareTo(Person o) {
          return this.birthDay.compareTo(o.birthDay);
+    }
+
+    public List<Person> getChildren(){
+        return List.copyOf(children);
     }
 }

@@ -20,6 +20,7 @@ public class Main {
         person.adopt(child1);
         person.adopt(child2);
         person.adopt(child3);
-        System.out.println(person.getYoungestChild());
+       // System.out.println(person.getYoungestChild());
+        System.out.println(person.getChildren());
     }
 }
