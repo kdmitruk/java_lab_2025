@@ -24,8 +24,8 @@ public class Main {
         //System.out.println(person.getChildren());
 //        for(var p: person.getChildren()) System.out.println(p);
         Family family = new Family();
-        family.add(person);
-        family.add(child);
-        System.out.println(family.get("Pawel Kowalski"));
+        family.add(person, child, child1, child2, child3);
+        //family.add(child);
+        System.out.printf("%s",family.get("Adam Nowak"));
     }
 }
