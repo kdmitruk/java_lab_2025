@@ -21,6 +21,11 @@ public class Main {
         person.adopt(child2);
         person.adopt(child3);
        // System.out.println(person.getYoungestChild());
-        System.out.println(person.getChildren());
+        //System.out.println(person.getChildren());
+//        for(var p: person.getChildren()) System.out.println(p);
+        Family family = new Family();
+        family.add(person);
+        family.add(child);
+        System.out.println(family.get("Pawel Kowalski"));
     }
 }

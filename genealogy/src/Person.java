@@ -43,4 +43,8 @@ public class Person implements Comparable<Person> {
     public List<Person> getChildren(){
         return List.copyOf(children);
     }
+
+    public String name(){
+        return this.firstName + " " + this.lastName;
+    }
 }
