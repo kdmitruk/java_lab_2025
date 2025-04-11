@@ -57,7 +57,7 @@ public class Person implements Comparable<Person> {
         return this.firstName + " " + this.lastName;
     }
 
-    public static Person fromCsvLine(String line){
+    public static Person fromCsvLine(String line) throws NegativeLifespanException {
         String[] tokens = line.split(",");
         String[] nameTokens = tokens[0].split(" ");
         String firstName = nameTokens[0];
@@ -65,8 +65,13 @@ public class Person implements Comparable<Person> {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate birthDate = !tokens[1].isEmpty() ? LocalDate.parse(tokens[1], formatter) : null;
         LocalDate deathDate = !tokens[2].isEmpty() ? LocalDate.parse(tokens[2], formatter) : null;
-
-        return new Person(firstName,lastName,birthDate,deathDate);
+        Person person = new Person(firstName,lastName,birthDate,deathDate);
+        if(birthDate != null && deathDate != null){
+            if(birthDate.isAfter(deathDate)){
+                throw new NegativeLifespanException(person);
+            }
+        }
+        return person;
     }
     public static List<Person> fromCsv(String path)
     {
@@ -77,11 +82,23 @@ public class Person implements Comparable<Person> {
             String line;
             while((line = reader.readLine())!=null)
             {
-                people.add(fromCsvLine(line));
+                try {
+                    people.add(fromCsvLine(line));
+                } catch (NegativeLifespanException e) {
+                    System.err.println(e.getMessage());
+                }
             }
             return people;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public LocalDate getDeathDate() {
+        return deathDate;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
     }
 }
