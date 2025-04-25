@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class PersonWithParentStrings {
     public final Person person;
@@ -28,7 +29,18 @@ public class PersonWithParentStrings {
             Person person = parent.person;
             for(PersonWithParentStrings possibleChild: peopleWithParentStrings.values()) {
                 if(possibleChild.parents.contains(person.name())) {
-                    person.addChild(possibleChild.person);
+                    try {
+                        if (person.getBirthDate().plusYears(15).isBefore(possibleChild.person.getBirthDate())) {
+                            person.addChild(possibleChild.person);
+                        } else {
+                            throw new ParentingAgeException("Person is too young!");
+                        }
+                    } catch (ParentingAgeException _) {
+                        System.out.printf("%s is too young to be a parent of %s. Do you accept the consequences?", person.name(), possibleChild.person.name());
+                        Scanner scanner = new Scanner(System.in);
+                        String answer = scanner.next();
+                        if(answer.equals("Y")) person.addChild(possibleChild.person);
+                    }
                 }
             }
         }
