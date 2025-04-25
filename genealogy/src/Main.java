@@ -12,11 +12,25 @@ public class Main {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        try {
+        /*try {
             List<Person> people = Person.fromBinaryFile("people.bin");
             System.out.println(people);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+        PlantUMLRunner.setJarPath(args[0]);
+        PlantUMLRunner.generate("@startuml\n" +
+                "\n" +
+                "object \"Jan Kowalski\" {\n" +
+                "  birth = 1.1.1970\n" +
+                "}\n" +
+                "\n" +
+                "object \"Anna Kowalska\" {\n" +
+                "  birth = 1.1.1990\n" +
+                "}\n" +
+                "\n" +
+                "\"Anna Kowalska\" --> \"Jan Kowalski\"\n" +
+                "\n" +
+                "@enduml\n", "uml", "test");
     }
 }
