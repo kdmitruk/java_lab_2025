@@ -16,6 +16,8 @@ public class PlantUMLRunner {
             FileWriter writer = new FileWriter(file);
             writer.write(data);
             writer.close();
+            ProcessBuilder builder = new ProcessBuilder("java", "-jar", jarPath, file.getPath());
+            builder.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
