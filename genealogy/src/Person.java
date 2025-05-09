@@ -3,7 +3,9 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Person implements Comparable<Person>, Serializable {
     private String firstName,lastName;
@@ -144,11 +146,23 @@ public class Person implements Comparable<Person>, Serializable {
             builder.append("\n}\n");
             return builder.toString();
         };
+        Function<Person, String> personToNameWithQuotation = person -> String.format("\"%s\"",person.name());
+        BiFunction<Person, Person, String> arrowBetweenPeople = (parent, child) -> personToNameWithQuotation.apply(parent)+"-->"+personToNameWithQuotation.apply(child);
         StringBuilder builder = new StringBuilder();
         builder.append("@startuml\n");
         builder.append(personToUmlObject.apply(this));
-        children.forEach(person -> builder.append(personToUmlObject.apply(person)));
-        builder.append("@enduml\n");
+        //children.forEach(person -> builder.append(personToUmlObject.apply(person)));
+        String childrenString = children.stream()
+                        .map(personToUmlObject)
+                        .collect(Collectors.joining());
+        builder.append(childrenString);
+        String arrowString = children.stream()
+                .map(child->arrowBetweenPeople.apply(this, child))
+                .collect(Collectors.joining("\n"));
+        builder.append(arrowString);
+        builder.append("\n@enduml\n");
         return builder.toString();
     }
+
+
 }
