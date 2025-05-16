@@ -1,4 +1,6 @@
-public class CustomList <T>{
+import java.util.AbstractList;
+
+public class CustomList <T> extends AbstractList<T> {
 
     private Node <T> head,tail;
     public void addLast(T value){
@@ -25,6 +27,7 @@ public class CustomList <T>{
         }
         head=created;
     }
+
     public T removeFirst(){
         if(head==null){
             return null;
@@ -59,5 +62,41 @@ public class CustomList <T>{
         }
     }
 
+
+
+
+
+    @Override
+    public T get(int index) {
+        Node<T>current = head;
+        for(int i = 0 ; i < index ; i++){
+            try {
+                current = current.next;
+            }
+            catch(NullPointerException e){
+                throw new IndexOutOfBoundsException(e.getMessage());
+
+            }
+        }
+        return current.value;
+    }
+
+    @Override
+    public int size() {
+        if(head == null) return 0;
+        Node <T> current = head;
+        int index = 1;
+        while(current.next!=null){
+            current = current.next;
+            index++;
+        }
+        return index;
+    }
+
+    @Override
+    public boolean add(T t) {
+        addLast(t);
+        return true;
+    }
 }
 
