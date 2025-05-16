@@ -25,5 +25,39 @@ public class CustomList <T>{
         }
         head=created;
     }
+    public T removeFirst(){
+        if(head==null){
+            return null;
+        }else{
+            T removed = head.value;
+            if(head==tail){
+                head=null;
+                tail=null;
+            }else{
+                head=head.next;
+            }
+            return removed;
+        }
+    }
+    public T removeLast(){
+        if(head==null){
+            return null;
+        }else{
+            T removed = tail.value;
+            if(head==tail){
+                head=null;
+                tail=null;
+            }else{
+                Node<T> current = head;
+                while(current.next!=tail){
+                    current = current.next;
+                }
+                current.next=null;
+                tail=current;
+            }
+            return removed;
+        }
+    }
+
 }
 

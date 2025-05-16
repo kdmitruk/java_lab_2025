@@ -6,5 +6,9 @@ public class Main {
         lista.addLast(9);
         lista.addFirst(7);
         System.out.println(lista.getFirst() +" "+ lista.getLast());
+        System.out.println(lista.removeFirst());
+        System.out.println(lista.getFirst() +" "+ lista.getLast());
+        System.out.println(lista.removeLast());
+        System.out.println(lista.getFirst() +" "+ lista.getLast());
     }
 }
