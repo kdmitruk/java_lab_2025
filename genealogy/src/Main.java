@@ -5,38 +5,33 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-//        List<Person> people = Person.fromCsv("family.csv");
-//        System.out.println(people);
-//        try {
-//            Person.toBinaryFile(people, "people.bin");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        /*try {
-            List<Person> people = Person.fromBinaryFile("people.bin");
-            System.out.println(people);
+
+        //String csvLine = "Marek Kowalski,15.05.1899,25.06.1957,,";
+        //Person person = Person.fromCsvLine(csvLine);
+        //System.out.println(person.generateTree());
+        PlantUMLRunner.setJarPath("./plantuml-1.2025.2.jar");
+        try {
+            List<Person> people = Person.fromCsv("family.csv");
+            PlantUMLRunner.generate(
+                    Person.generateTree(people,
+                            person -> Person.sortByLifespan(people).contains(person),
+                            //person -> Person.findOldestLiving(people) == person,
+                            text -> text + " #FFFF00"),
+                    "image_output", "all"
+
+            );
+            for (Person person : people) {
+                System.out.println(person.generateTree());
+                PlantUMLRunner.generate(person.generateTree(), "image_output", person.getName());
+            }
+            //Person.filterByName(people, "Kowalsk").forEach(System.out::println);
+//            Person.sortedByBirth(people).forEach(System.out::println);
+//            Person.sortByLifespan(people).forEach(System.out::println);
+            System.out.println(Person.findOldestLiving(people));
         } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        PlantUMLRunner.setJarPath(args[0]);
-//        PlantUMLRunner.generate("@startuml\n" +
-//                "\n" +
-//                "object \"Jan Kowalski\" {\n" +
-//                "  birth = 1.1.1970\n" +
-//                "}\n" +
-//                "\n" +
-//                "object \"Anna Kowalska\" {\n" +
-//                "  birth = 1.1.1990\n" +
-//                "}\n" +
-//                "\n" +
-//                "\"Anna Kowalska\" --> \"Jan Kowalski\"\n" +
-//                "\n" +
-//                "@enduml\n", "uml", "test");
-//    }
-        List<Person> people = Person.fromCsv("family.csv");
-        Family family = new Family();
-        people.forEach(family::add);
-        Person ewa = family.get("Ewa Kowalska")[0];
-        PlantUMLRunner.generate(ewa.toUML(), "uml", "Ewa");
+            throw new RuntimeException(e);
+        } catch (NegativeLifespanException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

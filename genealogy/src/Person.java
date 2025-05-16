@@ -1,168 +1,170 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class Person implements Comparable<Person>, Serializable {
-    private String firstName,lastName;
-    private LocalDate birthDate;
-    private LocalDate deathDate;
-    private SortedSet<Person> children;
+public class Person {
+    private final String name;
+    private final LocalDate birthDate;
+    private final LocalDate deathDate;
 
-    public Person(String firstName, String lastName, LocalDate birthDate) {
-        this(firstName, lastName, birthDate, null);
-    }
-    public Person(String firstName, String lastName, LocalDate birthDate, LocalDate deathDate){
-        this.firstName = firstName;
-        this.lastName = lastName;
+    private List<Person> parents = new ArrayList<>();
+
+    public Person(String name, LocalDate birthDate, LocalDate deathDate) {
+        this.name = name;
         this.birthDate = birthDate;
         this.deathDate = deathDate;
-        this.children = new TreeSet<>();
     }
-    public boolean adopt(Person child)
-    {
-        return this.children.add(child);
+
+    public static Person fromCsvLine(String csvLine) {
+        String[] parts = csvLine.split(",", -1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        //Marek Kowalski,15.05.1899,25.06.1957,,
+        LocalDate birthDate = LocalDate.parse(parts[1], formatter);
+        LocalDate deathDate = !parts[2].equals("") ? LocalDate.parse(parts[2], formatter) : null;
+        return new Person(parts[0], birthDate, deathDate);
     }
 
     @Override
     public String toString() {
-        return "Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthDay=" + birthDate +
-                ", deathDay=" + deathDate +
-                ", children=" + children +
-                '}';
+        return "Person{" + "name='" + name + '\'' + ", birthDate=" + birthDate + ", deathDate=" + deathDate + ", parents=" + parents + '}';
     }
 
-    public Person getYoungestChild(){
-        if(children.isEmpty()) return null;
+    public static List<Person> fromCsv(String path) throws IOException, NegativeLifespanException {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
 
-        return children.last();
-    }
+        List<Person> people = new ArrayList<>();
+        Map<String, PersonWithParentStrings> peopleWithParentStrings = new HashMap<>();
 
-    @Override
-    public int compareTo(Person o) {
-         return this.birthDate.compareTo(o.birthDate);
-    }
+        String line;
+        reader.readLine();
+        while ((line = reader.readLine()) != null) {
 
-    public List<Person> getChildren(){
-        return List.copyOf(children);
-    }
-    public void addChild(Person child) {
-        children.add(child);
-    }
+//            Person person = Person.fromCsvLine(line);
+            var personWithParentStrings = PersonWithParentStrings.fromCsvLine(line);
+            var person = personWithParentStrings.person;
 
-    public String name(){
-        return this.firstName + " " + this.lastName;
-    }
+            try {
+                person.validateAmbiguity(people);
+                people.add(person);
 
-    public static Person fromCsvLine(String line) throws NegativeLifespanException {
-        String[] tokens = line.split(",");
-        String[] nameTokens = tokens[0].split(" ");
-        String firstName = nameTokens[0];
-        String lastName = nameTokens[1];
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        LocalDate birthDate = !tokens[1].isEmpty() ? LocalDate.parse(tokens[1], formatter) : null;
-        LocalDate deathDate = !tokens[2].isEmpty() ? LocalDate.parse(tokens[2], formatter) : null;
-        Person person = new Person(firstName,lastName,birthDate,deathDate);
-        if(birthDate != null && deathDate != null){
-            if(birthDate.isAfter(deathDate)){
-                throw new NegativeLifespanException(person);
+                peopleWithParentStrings.put(person.name, personWithParentStrings);
+            } catch (AmbiguousPersonException e) {
+                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
         }
-        return person;
-    }
-    public static List<Person> fromCsv(String path)
-    {
-        try {
-            Map<String, PersonWithParentStrings> peopleWithParentStrings = new HashMap<>();
-            BufferedReader reader = new BufferedReader(new FileReader(path));
-            reader.readLine();
-            String line;
-            while((line = reader.readLine())!=null)
-            {
-                try {
-                    // Person newPerson = fromCsvLine(line);
-                    PersonWithParentStrings newPerson = PersonWithParentStrings.fromCsvLine(line);
-                    /*for(Person existingPerson : peopleWithParentStrings){
-                        if(existingPerson.name().equals(newPerson)){
-                            throw new AmbiguousPersonException(existingPerson, newPerson);
-                        }
-                    }*/
-                    peopleWithParentStrings.put(newPerson.person.name(), newPerson);
-                } catch (NegativeLifespanException/* | AmbiguousPersonException*/ e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-            PersonWithParentStrings.linkRelatives(peopleWithParentStrings);
-            List<Person> result = new ArrayList<>();
-            for(PersonWithParentStrings personWithStrings: peopleWithParentStrings.values())
-                result.add(personWithStrings.person);
-            return result;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        PersonWithParentStrings.linkRelatives(peopleWithParentStrings);
+
+        reader.close();
+        return people;
     }
 
-    public LocalDate getDeathDate() {
-        return deathDate;
+    public void addParent(Person parent) {
+        parents.add(parent);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public static void toBinaryFile(List<Person> people, String path) throws IOException {
-        FileOutputStream fos = new FileOutputStream(path);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-
-        oos.writeObject(people);
-
-        oos.close();
+    public LocalDate getDeathDate() {
+        return deathDate;
     }
-    public static List<Person> fromBinaryFile(String path) throws IOException {
-        FileInputStream fis = new FileInputStream(path);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        List<Person> people = null;
-        try {
-            people = (ArrayList<Person>) ois.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+
+
+    private void validateAmbiguity(List<Person> people) throws AmbiguousPersonException {
+        for (Person person : people) {
+
         }
-
-        ois.close();
-        return people;
     }
-    public String toUML(){
-        Function<Person, String> personToUmlObject = (person) -> {
-            StringBuilder builder = new StringBuilder();
-            builder.append(String.format("object \"%s\" {\n", person.name()));
-            builder.append(String.format("birth = %s", person.birthDate));
-            builder.append("\n}\n");
-            return builder.toString();
-        };
-        Function<Person, String> personToNameWithQuotation = person -> String.format("\"%s\"",person.name());
-        BiFunction<Person, Person, String> arrowBetweenPeople = (parent, child) -> personToNameWithQuotation.apply(parent)+"-->"+personToNameWithQuotation.apply(child);
-        StringBuilder builder = new StringBuilder();
-        builder.append("@startuml\n");
-        builder.append(personToUmlObject.apply(this));
-        //children.forEach(person -> builder.append(personToUmlObject.apply(person)));
-        String childrenString = children.stream()
-                        .map(personToUmlObject)
-                        .collect(Collectors.joining());
-        builder.append(childrenString);
-        String arrowString = children.stream()
-                .map(child->arrowBetweenPeople.apply(this, child))
-                .collect(Collectors.joining("\n"));
-        builder.append(arrowString);
-        builder.append("\n@enduml\n");
-        return builder.toString();
+
+    //object "Janusz Kowalski" as JanuszKowalski
+    public String generateTree() {
+        String result = "@startuml\n%s\n%s\n@enduml";
+        Function<Person, String> objectName = person -> person.getName().replaceAll(" ", "");
+        Function<Person, String> objectLine = person -> String.format("object \"%s\" as %s", person.getName(), objectName.apply(person));
+        //result=String.format(result,objectLine.apply(this));
+        StringBuilder objects = new StringBuilder();
+        StringBuilder relations = new StringBuilder();
+        objects.append(objectLine.apply(this)).append("\n");
+        parents.forEach(parent -> {
+            objects.append(objectLine.apply(parent)).append("\n");
+            relations.append(String.format("%s <-- %s\n", objectName.apply(parent), objectName.apply(this)));
+        });
+        result = String.format(result, objects, relations);
+        return result;
     }
 
 
+    public static String generateTree(List<Person> people, Predicate<Person> condition, Function<String, String> postProcess) {
+        String result = "@startuml\n%s\n%s\n@enduml";
+        Function<String, String> objectName = str -> str.replaceAll("\\s+", "");
+        Function<String, String> objectLine = str -> String.format("object \"%s\" as %s",str, objectName.apply(str));
+        Function<String, String> objectLineAndPostprocess = objectLine.andThen(postProcess);
+
+        Map<Boolean, List<Person>> groupedPeople = people.stream()
+                .collect(Collectors.partitioningBy(condition));
+
+        Set<String> objects = groupedPeople.get(true).stream()
+                .map(person -> person.name)
+                .map(objectLineAndPostprocess)
+                .collect(Collectors.toSet());
+        objects.addAll(groupedPeople.get(false).stream()
+                .map(person -> person.name)
+                .map(objectLine)
+                .collect(Collectors.toSet())
+        );
+
+        Set<String> relations = people.stream()
+                .flatMap(person -> person.parents.stream()
+                        .map(parent -> objectName.apply(parent.name) + "<--" + objectName.apply(person.name)))
+                .collect(Collectors.toSet());
+
+        String objectString = String.join("\n", objects);
+        String relationString = String.join("\n", relations);
+
+        return String.format(result, objectString, relationString);
+    }
+
+    public static List<Person> filterByName(List<Person> people, String text){
+        return people.stream()
+                .filter(person -> person.getName().contains(text))
+                .collect(Collectors.toList());
+    }
+    public static List<Person> sortedByBirth(List<Person> people){
+        return people.stream()
+                .sorted(Comparator.comparing(Person::getBirthDate))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Person> sortByLifespan(List<Person> people){
+
+        Function<Person, Long> getLifespan = person
+                -> person.deathDate.toEpochDay() - person.birthDate.toEpochDay();
+
+        return people.stream()
+                .filter(person -> person.deathDate != null)
+                .sorted((o2, o1) -> Long.compare(getLifespan.apply(o1), getLifespan.apply(o2)))
+//                .sorted(Comparator.comparingLong(getLifespan::apply))
+//                .sorted(Collections.reverseOrder())
+                .toList();
+    }
+
+    public static Person findOldestLiving(List<Person> people){
+        return people.stream()
+                .filter(person -> person.deathDate == null)
+                .min(Comparator.comparing(Person::getBirthDate))
+                .orElse(null);
+
+    }
 }

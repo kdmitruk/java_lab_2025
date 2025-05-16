@@ -5,15 +5,15 @@ public class Family {
 
     public void add(Person... people){
         for (Person person : people){
-            if(this.people.containsKey(person.name())){
-                List<Person> peopleWithSameName = this.people.get(person.name());
+            if(this.people.containsKey(person.getName())){
+                List<Person> peopleWithSameName = this.people.get(person.getName());
                 if(!peopleWithSameName.contains(person)){
                     peopleWithSameName.add(person);
                 }
             } else {
                 List<Person> peopleWithSameName = new ArrayList<>();
                 peopleWithSameName.add(person);
-                this.people.put(person.name(), peopleWithSameName);
+                this.people.put(person.getName(), peopleWithSameName);
             }
         }
     }
