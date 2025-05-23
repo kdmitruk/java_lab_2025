@@ -1,4 +1,6 @@
 import java.util.AbstractList;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class CustomList <T> extends AbstractList<T> {
 
@@ -78,6 +80,7 @@ public class CustomList <T> extends AbstractList<T> {
 
             }
         }
+        System.out.println("GET");
         return current.value;
     }
 
@@ -90,6 +93,7 @@ public class CustomList <T> extends AbstractList<T> {
             current = current.next;
             index++;
         }
+        System.out.println("SIZE");
         return index;
     }
 
@@ -97,6 +101,32 @@ public class CustomList <T> extends AbstractList<T> {
     public boolean add(T t) {
         addLast(t);
         return true;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
+            private Node<T> node = head;
+            @Override
+            public boolean hasNext() {
+                return node != null;
+            }
+
+            @Override
+            public T next() {
+                T current = node.value;
+                node = node.next;
+                return current;
+            }
+        };
+    }
+
+    @Override
+    public Stream<T> stream() {
+        Stream.Builder<T> builder = Stream.builder();
+        for(T value: this)
+            builder.add(value);
+        return builder.build();
     }
 }
 

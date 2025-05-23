@@ -15,8 +15,16 @@ public class Main {
 //        System.out.println(lista.getFirst() +" "+ lista.getLast());
 
         //NIEOPTYMALNE!!!!!!!!!
-        for(int i = 0 ; i < lista.size() ; i++){
-            System.out.println(lista.get(i));
-        }
+//        for(int i = 0 ; i < lista.size() ; i++){
+//            System.out.println(lista.get(i));
+//        }
+
+//        for(Integer value: lista) {
+//            System.out.println(value);
+//        }
+
+        lista.stream()
+                .filter(value -> value % 2 != 0)
+                .forEach(System.out::println);
     }
 }
