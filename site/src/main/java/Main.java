@@ -1,3 +1,4 @@
+import auth.Account;
 import database.DatabaseConnection;
 
 import java.sql.*;
@@ -7,8 +8,11 @@ public class Main {
         DatabaseConnection connection = new DatabaseConnection();
         try {
             connection.connect("database.sql");
-            System.out.println(set(connection,"abc","pass2"));
-            get(connection);
+//            System.out.println(set(connection,"abc","pass2"));
+//            get(connection);
+            Account.register("gfdg", "gdhfgjdf");
+            Account a = Account.getAccount("gfdg");
+
             connection.disconnect();
         } catch (SQLException e) {
             throw new RuntimeException(e);

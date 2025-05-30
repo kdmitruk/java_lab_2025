@@ -3,19 +3,24 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseConnection {
-    private Connection connection;
 
+    private static Map<String,Connection> connections = new HashMap<>();
 
-    public Connection getConnection() {
-        return connection;
+    public static Connection getConnection() {
+        return connections.get("");
     }
 
     public void connect(String path) throws SQLException {
-        connection = DriverManager.getConnection("jdbc:sqlite:"+path);
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:"+path);
+        connections.put("", connection);
     }
     public void disconnect() throws SQLException {
-        connection.close();
+        connections.get("").close();
+        connections.remove("");
     }
+
 }
