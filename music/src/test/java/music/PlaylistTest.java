@@ -44,13 +44,25 @@ public class PlaylistTest {
         assertEquals(piosenka, playlist.atSecond(100));
     }
 
-    @Test
-    public void testAtSecondThrowsException() {
+    public IndexOutOfBoundsException testAtSecondThrowsExceptionCommon(int second) {
         Playlist playlist = new Playlist();
         Song piosenka = new Song("Eminem", "The Real Slim Shady", 200);
         playlist.add(piosenka);
         Song piosenka2 = new Song("Fimiguerrero", "Tartan", 150);
         playlist.add(piosenka2);
-        assertThrows(IndexOutOfBoundsException.class, () -> playlist.atSecond(300213123));
+
+        return assertThrows(IndexOutOfBoundsException.class, () -> playlist.atSecond(second));
+    }
+
+    @Test
+    public void testAtSecondThrowsException() {
+        IndexOutOfBoundsException exception = testAtSecondThrowsExceptionCommon(2134215);
+        assertEquals("Wykroczenie poza czas playlisty.",exception.getMessage());
+    }
+
+    @Test
+    public void testAtSecondThrowsExceptionForNegativeSeconds() {
+        IndexOutOfBoundsException exception = testAtSecondThrowsExceptionCommon(-21);
+        assertEquals("Sekundy nie mogą być ujemne.",exception.getMessage());
     }
 }
