@@ -33,4 +33,15 @@ public class PlaylistTest {
         Song piosenka2 = new Song("Eminem", "The Real Slim Shady", 200);
         assertEquals(piosenka2,playlist.getFirst());
     }
+
+    @Test
+    public void testAtSecond(){
+        Playlist playlist = new Playlist();
+        Song piosenka = new Song("Eminem", "The Real Slim Shady", 200);
+        playlist.add(piosenka);
+        Song piosenka2 = new Song("Fimiguerrero", "Tartan", 150);
+        playlist.add(piosenka2);
+        assertEquals(piosenka, playlist.atSecond(100));
+        assertEquals(piosenka2, playlist.atSecond(300));
+    }
 }
