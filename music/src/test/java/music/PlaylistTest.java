@@ -24,4 +24,13 @@ public class PlaylistTest {
         playlist.add(piosenka);
         assertEquals(piosenka, playlist.getFirst());
     }
+
+    @Test
+    public void containsEqualElement() {
+        Playlist playlist = new Playlist();
+        Song piosenka = new Song("Eminem", "The Real Slim Shady", 200);
+        playlist.add(piosenka);
+        Song piosenka2 = new Song("Eminem", "The Real Slim Shady", 200);
+        assertEquals(piosenka2,playlist.getFirst());
+    }
 }
