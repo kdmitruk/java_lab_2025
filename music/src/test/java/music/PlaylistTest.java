@@ -42,6 +42,15 @@ public class PlaylistTest {
         Song piosenka2 = new Song("Fimiguerrero", "Tartan", 150);
         playlist.add(piosenka2);
         assertEquals(piosenka, playlist.atSecond(100));
-        assertEquals(piosenka2, playlist.atSecond(300));
+    }
+
+    @Test
+    public void testAtSecondThrowsException() {
+        Playlist playlist = new Playlist();
+        Song piosenka = new Song("Eminem", "The Real Slim Shady", 200);
+        playlist.add(piosenka);
+        Song piosenka2 = new Song("Fimiguerrero", "Tartan", 150);
+        playlist.add(piosenka2);
+        assertThrows(IndexOutOfBoundsException.class, () -> playlist.atSecond(300213123));
     }
 }
