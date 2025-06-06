@@ -13,12 +13,12 @@ public class Server {
     }
 
     public void listen() throws IOException {
-        Socket socket = serverSocket.accept();
-        InputStream input = socket.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        String message;
-        while((message = reader.readLine()) != null) {
-            System.out.println(message);
+        while(true) {
+            Socket socket = serverSocket.accept();
+
+            ClientHandler handler = new ClientHandler(socket);
+            Thread thread = new Thread(handler);
+            thread.start();
         }
     }
 }
