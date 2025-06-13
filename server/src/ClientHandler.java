@@ -30,8 +30,12 @@ public class ClientHandler implements Runnable{
             server.onClientConnected(this);
             while((message = reader.readLine()) != null) {
                 System.out.println(message);
-                if(message.equals("/online")){
+                if(message.equals("/online")) {
+
                     server.sendOnlineList(this);
+                } else if (message.startsWith("/w ")) {
+                    String[] parts = message.substring("/w ".length()).split(" ", 2);
+                    server.whisper(this, parts[0], parts[1]);
                 } else {
                     server.broadcast(message,login);
                 }

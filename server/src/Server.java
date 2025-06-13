@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Server {
@@ -53,5 +54,16 @@ public class Server {
         client.send("$online$" + clientHandlers.stream()
                 .map(ClientHandler::getLogin)
                 .collect(Collectors.joining("$")));
+    }
+
+    public void whisper(ClientHandler sender, String recipient, String message){
+        Optional<ClientHandler> recipientHandler = clientHandlers.stream()
+                .filter(client -> client.getLogin().equals(recipient))
+                .findFirst();
+        if(recipientHandler.isPresent()){
+            recipientHandler.get().send(sender.getLogin() + ": " + message);
+        } else {
+            sender.send("Nie ma uzytkownika " + recipient);
+        }
     }
 }
