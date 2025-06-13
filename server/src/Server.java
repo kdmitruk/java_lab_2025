@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Server {
     ServerSocket serverSocket;
@@ -46,5 +47,11 @@ public class Server {
         for(ClientHandler alreadyConnectedClient : clientHandlers){
             alreadyConnectedClient.send("$logout$" + disconnectedClient.getLogin());
         }
+    }
+
+    public void sendOnlineList(ClientHandler client){
+        client.send("$online$" + clientHandlers.stream()
+                .map(ClientHandler::getLogin)
+                .collect(Collectors.joining("$")));
     }
 }

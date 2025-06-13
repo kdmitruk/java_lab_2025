@@ -30,7 +30,12 @@ public class ClientHandler implements Runnable{
             server.onClientConnected(this);
             while((message = reader.readLine()) != null) {
                 System.out.println(message);
-                server.broadcast(message,login);
+                if(message.equals("/online")){
+                    server.sendOnlineList(this);
+                } else {
+                    server.broadcast(message,login);
+                }
+
             }
             socket.close();
             server.onClientDisconnected(this);
