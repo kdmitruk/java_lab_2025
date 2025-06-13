@@ -33,4 +33,18 @@ public class Server {
             handler.send(sender + ": " + message);
         }
     }
+    public void onClientConnected(ClientHandler newClient)
+    {
+        for(ClientHandler alreadyConnectedClient : clientHandlers){
+            if(alreadyConnectedClient != newClient){
+                alreadyConnectedClient.send("$login$" + newClient.getLogin());
+            }
+        }
+    }
+    public void onClientDisconnected(ClientHandler disconnectedClient){
+        clientHandlers.remove(disconnectedClient);
+        for(ClientHandler alreadyConnectedClient : clientHandlers){
+            alreadyConnectedClient.send("$logout$" + disconnectedClient.getLogin());
+        }
+    }
 }
