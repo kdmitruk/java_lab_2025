@@ -1,5 +1,12 @@
 package music;
 
+import music_db.DatabaseConnection;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
+
 //public record Song(String artist, String title, int duration) {
 //}
 public class Song {
@@ -33,5 +40,32 @@ public class Song {
         return this.artist.equals(song.artist)
                 && this.title.equals(song.title)
                 && this.duration == song.duration;
+    }
+
+    public static class Persistence {
+        public static Optional<Song> read(int id) throws SQLException {
+            String sql = "SELECT artist, title, length FROM song WHERE id = ?";
+            PreparedStatement statement = DatabaseConnection.getConnection("songs").prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()) {
+                return Optional.of(new Song(
+                        resultSet.getString("artist"),
+                        resultSet.getString("title"),
+                        resultSet.getInt("length")
+                ));
+            }
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Song{" +
+                "artist='" + artist + '\'' +
+                ", title='" + title + '\'' +
+                ", duration=" + duration +
+                '}';
     }
 }
