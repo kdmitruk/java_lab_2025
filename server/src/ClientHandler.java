@@ -6,6 +6,7 @@ public class ClientHandler implements Runnable{
     private BufferedReader reader;
     private PrintWriter writer;
     private Server server;
+    private String login;
 
     public ClientHandler(Socket socket,Server server) throws IOException {
         InputStream input = socket.getInputStream();
@@ -19,9 +20,11 @@ public class ClientHandler implements Runnable{
     public void run() {
         String message;
         try {
+            login = reader.readLine();
+
             while((message = reader.readLine()) != null) {
                 System.out.println(message);
-                server.broadcast(message);
+                server.broadcast(message,login);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

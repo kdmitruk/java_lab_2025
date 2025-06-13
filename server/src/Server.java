@@ -27,9 +27,10 @@ public class Server {
         }
     }
 
-    public void broadcast(String message) {
+    public void broadcast(String message,String sender) {
+
         for(ClientHandler handler : clientHandlers) {
-            handler.send(message);
+            handler.send(sender + ": " + message);
         }
     }
 }
