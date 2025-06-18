@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 
-public class ClientThread extends Thread{
+class ClientThread extends Thread{
 
     private BufferedReader reader;
     private PrintWriter writer;
