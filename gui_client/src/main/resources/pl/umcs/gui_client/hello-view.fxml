@@ -15,7 +15,7 @@
   </rowConstraints>
    <children>
       <TextArea fx:id="outputArea" prefHeight="200.0" prefWidth="200.0" />
-      <TextField fx:id="inputField" GridPane.rowIndex="1" />
+      <TextField fx:id="inputField" onAction="#onSend" GridPane.rowIndex="1" />
       <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSend" text="Send" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <ListView fx:id="clientList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
    </children>
